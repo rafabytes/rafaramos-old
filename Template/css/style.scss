@@ -1,0 +1,62 @@
+$fonte-corpo: 'Open Sans', sans-serif;
+$fonte-titulos: 'VT323';
+$cor-primaria: #34495e;
+$cor-secundaria: #2c3e50;
+$preto: #20272e;
+$branco: #F5F5F5;
+
+body {
+	font-family: $fonte-corpo;
+	color: $cor-secundaria;
+	padding-top: 50px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: $fonte-titulos;
+	color: $cor-primaria;
+	text-transform: lowercase;
+}
+
+#intro {
+	// height: 100vh;
+	.jumbotron {
+		color: $branco;
+		text-align: center;
+		text-shadow: 1px 1px $cor-secundaria;
+		// background-image: url('../images/background.jpg');
+		background-color: $cor-primaria;
+	}
+}
+
+#sobre {
+	text-align: center;
+}
+
+.linha-discreta {
+	display: block;
+	width: 80px;
+	height: 2px;
+	background: $cor-primaria;
+	margin: 0 auto;
+}
+
+.btn {
+	font-family: $fonte-titulos;
+	text-transform: uppercase;
+}
+
+.btn-primary {
+	background-color: $cor-primaria;
+	border-color: $cor-secundaria;
+}
+
+.btn-primary:hover {
+	background-color: $cor-secundaria;
+	border-color: $cor-secundaria;
+}
+
+.btn-large {
+	font-size: 24px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
