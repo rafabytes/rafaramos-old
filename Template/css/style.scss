@@ -1,3 +1,7 @@
+/* ==========================================================================
+   Definindo valores padrões
+   ========================================================================== */
+
 $fonte-corpo: 'Open Sans', sans-serif;
 $fonte-titulos: 'VT323';
 $cor-primaria: #34495e;
@@ -5,39 +9,88 @@ $cor-secundaria: #2c3e50;
 $preto: #20272e;
 $branco: #F5F5F5;
 
+/* ==========================================================================
+   Elementos básicos
+   ========================================================================== */
+
 body {
-	font-family: $fonte-corpo;
-	color: $cor-secundaria;
+	position: relative;
 	padding-top: 50px;
+	color: $cor-secundaria;
+	font-family: $fonte-corpo;
 }
 
 h1, h2, h3, h4, h5, h6 {
 	font-family: $fonte-titulos;
-	color: $cor-primaria;
 	text-transform: lowercase;
+	color: $cor-primaria;
 }
 
-#intro {
-	// height: 100vh;
-	.jumbotron {
-		color: $branco;
-		text-align: center;
-		text-shadow: 1px 1px $cor-secundaria;
-		// background-image: url('../images/background.jpg');
-		background-color: $cor-primaria;
+hr {
+	margin-top: 50px;
+	margin-bottom: 50px;
+	border: none;
+	border-bottom: 1px dotted;
+}
+
+a {
+	-o-transition:.25s;
+	-ms-transition:.25s;
+	-moz-transition:.25s;
+	-webkit-transition:.25s;
+}
+
+input, textarea {
+	padding: 10px;
+	font-family: monospace;
+}
+
+footer {
+	position: relative;
+	padding-top: 50px;
+	padding-bottom: 30px;
+	color: $branco;
+	text-align: center;
+	background-color: $cor-secundaria;
+}
+
+/* ==========================================================================
+   Classes de apoio
+   ========================================================================== */
+
+.align-left {
+	text-align: left;
+}
+.align-center {
+	text-align: center;
+}
+.align-right {
+	text-align: right;
+}
+
+.vAlign {
+	width: 100%;
+	height: 100%;
+	display: table;
+	.vBox {
+		display: table-cell;
+		vertical-align: middle;
 	}
 }
 
-#sobre {
-	text-align: center;
+.linha-discreta {
+	width: 91px;
+	border-top: 1px dotted #34495e;
+	margin: 0 auto 30px auto;
 }
 
-.linha-discreta {
-	display: block;
-	width: 80px;
-	height: 2px;
-	background: $cor-primaria;
-	margin: 0 auto;
+/* ==========================================================================
+   Personalizando o bootstrap
+   ========================================================================== */
+
+.navbar-default {
+	background-color: rgba(255,255,255,.95);
+	border: none;
 }
 
 .btn {
@@ -48,15 +101,67 @@ h1, h2, h3, h4, h5, h6 {
 .btn-primary {
 	background-color: $cor-primaria;
 	border-color: $cor-secundaria;
-}
-
-.btn-primary:hover {
-	background-color: $cor-secundaria;
-	border-color: $cor-secundaria;
+	&:hover {
+		background-color: $cor-secundaria;
+		border-color: $cor-secundaria;
+	}
 }
 
 .btn-large {
 	font-size: 24px;
 	padding-left: 20px;
 	padding-right: 20px;
+}
+
+/* ==========================================================================
+   Página principal
+   ========================================================================== */
+
+section.featured {
+	text-align: center;
+	.featured-title {
+		margin-bottom: 50px;
+	}
+	.row {
+		margin-bottom: 30px;
+	}
+}
+
+#intro {
+	// height: 100vh;
+	.jumbotron {
+		
+	}
+}
+
+#blog {
+	[class^='col'] {
+		height: 300px;
+	}
+}
+
+#intro {
+	position: relative;
+	height: 400px;
+	color: $branco;
+	text-align: center;
+	text-shadow: 1px 1px $cor-secundaria;
+	background-color: $cor-primaria;
+	background-image: url('../images/background.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-attachment: fixed;
+}
+
+#back-to-top {
+	position: absolute;
+	bottom: 30px;
+	right: 30px;
+	a {
+		color: $branco;
+		opacity: .8;
+		&:hover {
+			opacity: 1;
+		}
+	}
 }

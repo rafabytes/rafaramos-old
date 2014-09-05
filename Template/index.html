@@ -1,15 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rafa Ramos - Desenvolvedor Front-end</title>
 
-    <title>Rafael Ramos - Desenvolvedor Front-end</title>
+    <!-- Favicon -->
+    <link rel="icon" href="images/favicon.png">
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -34,7 +33,7 @@
     <![endif]-->
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target=".navbar-collapse" data-offset="101">
 
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -46,7 +45,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#"><i class="fa fa-code"></i> Rafael Ramos</a>
+          <a class="navbar-brand" href="#intro"><i class="fa fa-code"></i> Rafa Ramos</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -60,51 +59,130 @@
     </div>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <section id="intro">
-      <div class="jumbotron">
-        <div class="container">
+    <section id="intro" class="jumbotron" data-speed="5">
+      <div class="vAlign">
+        <div class="vBox">
           <h1>Hello World!</h1>
           <p>Precisando de um site? Talvez eu possa ajudar :)</p>
-          <!-- <a href="contato.html" class="btn btn-primary btn-large">Fale comigo</a> -->
         </div>
       </div>
     </section>
 
-    <div class="container">
-
-    <section id="sobre">
-      <div class="title">
-        <h1>O que eu faço</h1>
-        <p class="legenda">Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
-      </div>
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-md-4">
-          <i class="fa fa-tablet fa-4x"></i>
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+    <section id="sobre" class="container featured">
+        <div class="featured-title">
+          <h1>O que eu faço</h1>
+          <div class="linha-discreta"></div>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
         </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        <div class="row">
+          <div class="col-md-4">
+            <i class="fa fa-paint-brush fa-3x"></i>
+            <h2>Heading</h2>
+            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          </div>
+          <div class="col-md-4">
+            <i class="fa fa-mobile fa-3x"></i>
+            <h2>Heading</h2>
+            <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+         </div>
+          <div class="col-md-4">
+            <i class="fa fa-search fa-3x"></i>
+            <h2>Heading</h2>
+            <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          </div>
+        </div>
+        <hr>
+    </section>
+
+    <section id="portfolio" class="featured">
+      <div class="container">
+        <div class="featured-title">
+          <h1>Trabalhos mais recentes</h1>
+          <div class="linha-discreta"></div>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div style="width: 100%; height: 300px; border: 1px solid #eee;"></div>
+            <h2>Heading</h2>
+          </div>
+          <div class="col-md-4">
+            <div style="width: 100%; height: 300px; border: 1px solid #eee;"></div>
+            <h2>Heading</h2>
+         </div>
+          <div class="col-md-4">
+            <div style="width: 100%; height: 300px; border: 1px solid #eee;"></div>
+            <h2>Heading</h2>
+          </div>
+        </div>
+        <a href="portfolio" class="btn btn-default">Ver mais</a>
+        <hr>
+      </div>
+    </section>
+
+    <section id="blog" class="featured">
+      <div class="container">
+        <div class="featured-title">
+          <h1>Última do blog</h1>
+          <div class="linha-discreta"></div>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div style="width: 100%; height: 300px; border: 1px solid #eee;"></div>
+          </div>
+          <div class="col-md-6">
+            <div class="vAlign">
+              <div class="vBox">
+                <h2>Heading</h2>
+                <p>08/01/2014</p>
+                <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-      <hr>
+    <!-- <section id="parallax" data-speed="5">
+      <div class="vAlign">
+        <div class="vBox">
+          <h1>Hello World!</h1>
+          <p>Precisando de um site? Talvez eu possa ajudar :)</p>
+        </div>
+      </div>
+    </section> -->
 
-      <footer>
-        <p>&copy; Company 2014</p>
-      </footer>
+    <section id="contato" class="featured">
+      <div class="container">
+        <div class="featured-title">
+          <h1>Fale comigo</h1>
+          <div class="linha-discreta"></div>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
+        </div>
+        <div class="row">
+          <div class="col-md-6 align-right"><input type="text" placeholder="nome"></div>
+          <div class="col-md-6 align-left"><input type="text" placeholder="e-mail"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <textarea class="form-control" rows="3">mensagem</textarea>
+          </div>
+        </div>
+        <div class="row">
+          <p><a href="#" class="btn btn-primary btn-large">enviar</a></p>
+        </div>
+      </div>
+    </section>
 
-    </div> <!-- /container -->
+    <footer>
+      <div class="container">
+        <p>&copy; Rafa Ramos 2014</p>
+      </div>
+      <div id="back-to-top">
+        <a href="#intro"><i class="fa fa-chevron-circle-up fa-3x"></i></a>
+      </div>
+    </footer>
 
 
     <!-- Bootstrap core JavaScript
@@ -114,5 +192,9 @@
     <script src="js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="js/ie10-viewport-bug-workaround.js"></script>
+    <!-- Smooth Scrolling -->
+    <script src="js/smoothscroll.js"></script>
+    <!-- Parallax -->
+    <script src="js/parallax.js"></script>
   </body>
 </html>
