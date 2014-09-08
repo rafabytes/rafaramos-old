@@ -9,7 +9,7 @@ body {
   position: relative;
   padding-top: 50px;
   color: #2c3e50;
-  font-family: "Open Sans", sans-serif; }
+  font-family: "Source Code Pro", sans-serif; }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "VT323";
@@ -17,10 +17,8 @@ h1, h2, h3, h4, h5, h6 {
   color: #34495e; }
 
 hr {
-  margin-top: 50px;
-  margin-bottom: 50px;
-  border: none;
-  border-bottom: 1px dotted; }
+  margin: 0 auto;
+  border: 2px dashed; }
 
 a {
   -o-transition: .25s;
@@ -34,9 +32,10 @@ input, textarea {
 
 footer {
   position: relative;
+  border-top: 3px dashed #e6e6e6;
   padding-top: 50px;
   padding-bottom: 30px;
-  color: #F5F5F5;
+  color: #e6e6e6;
   text-align: center;
   background-color: #2c3e50; }
 
@@ -61,8 +60,8 @@ footer {
     vertical-align: middle; }
 
 .linha-discreta {
-  width: 91px;
-  border-top: 1px dotted #34495e;
+  width: 88px;
+  border: 1px dashed;
   margin: 0 auto 30px auto; }
 
 /* ==========================================================================
@@ -80,8 +79,9 @@ footer {
   background-color: #34495e;
   border-color: #2c3e50; }
   .btn-primary:hover {
-    background-color: #2c3e50;
-    border-color: #2c3e50; }
+    background-color: #34495e;
+    border-color: #2c3e50;
+    opacity: .9; }
 
 .btn-large {
   font-size: 24px;
@@ -92,35 +92,73 @@ footer {
    Página principal
    ========================================================================== */
 section.featured {
+  padding: 50px 0;
   text-align: center; }
   section.featured .featured-title {
     margin-bottom: 50px; }
   section.featured .row {
     margin-bottom: 30px; }
+  section.featured.dark {
+    background-color: #e6e6e6; }
 
 #blog [class^='col'] {
   height: 300px; }
 
 #intro {
   position: relative;
-  height: 400px;
-  color: #F5F5F5;
+  height: 600px;
+  color: #fff;
   text-align: center;
   text-shadow: 1px 1px #2c3e50;
   background-color: #34495e;
   background-image: url("../images/background.jpg");
   background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed; }
+  background-size: cover; }
+  #intro.jumbotron {
+    padding: 0;
+    margin-bottom: 10px; }
+    #intro.jumbotron p {
+      font-weight: 500; }
+  #intro .vAlign {
+    background-color: rgba(52, 73, 94, 0.5); }
+  #intro #hello-world {
+    width: 420px;
+    margin: 0 auto; }
+    #intro #hello-world li {
+      width: 420px;
+      text-align: center; }
+
+#portfolio .item-portfolio {
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #ccc;
+  -o-transition: .25s;
+  -ms-transition: .25s;
+  -moz-transition: .25s;
+  -webkit-transition: .25s; }
+  #portfolio .item-portfolio:hover {
+    background-color: #e6e6e6; }
+
+#contato {
+  padding-bottom: 20px; }
+  #contato .form-contato {
+    width: 460px;
+    margin: 0 auto; }
+  #contato input[type="text"] {
+    width: 215px; }
 
 #back-to-top {
   position: absolute;
   bottom: 30px;
   right: 30px; }
   #back-to-top a {
-    color: #F5F5F5;
+    color: #e6e6e6;
     opacity: .8; }
     #back-to-top a:hover {
       opacity: 1; }
+
+/* ==========================================================================
+   Responsividade
+   ========================================================================== */
 
 /*# sourceMappingURL=style.css.map */

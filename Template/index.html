@@ -14,7 +14,8 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Import Google Fonts -->
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800|VT323' rel='stylesheet' type='text/css'>
+    <!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800|VT323' rel='stylesheet' type='text/css'> -->
+    <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro:200,300,400,500,600,700|Open+Sans:300italic,400italic,600italic,400,300,600,700|VT323' rel='stylesheet' type='text/css'>
 
     <!-- Import Font Awesome -->
     <link rel="stylesheet" href="fonts/font-awesome/css/font-awesome.min.css">
@@ -33,7 +34,7 @@
     <![endif]-->
   </head>
 
-  <body data-spy="scroll" data-target=".navbar-collapse" data-offset="101">
+  <body data-spy="scroll" data-target=".navbar-collapse" data-offset="60">
 
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -62,13 +63,23 @@
     <section id="intro" class="jumbotron" data-speed="5">
       <div class="vAlign">
         <div class="vBox">
-          <h1>Hello World!</h1>
+          <div id="hello-world">
+            <ul>
+              <li><h1>Olá mundo!</h1></li>
+              <li><h1>Hello world!</h1></li>
+              <li><h1>Bonjour monde!</h1></li>
+              <li><h1>Hello wereld!</h1></li>
+              <li><h1>Ciao mondo!</h1></li>
+              <li><h1>Hola mundo!</h1></li>
+            </ul>
+          </div>
           <p>Precisando de um site? Talvez eu possa ajudar :)</p>
         </div>
       </div>
     </section>
 
-    <section id="sobre" class="container featured">
+    <section id="sobre" class="featured">
+      <div class="container">
         <div class="featured-title">
           <h1>O que eu faço</h1>
           <div class="linha-discreta"></div>
@@ -91,10 +102,12 @@
             <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
           </div>
         </div>
-        <hr>
+      </div>
     </section>
 
-    <section id="portfolio" class="featured">
+    <hr>
+
+    <section id="portfolio" class="featured dark">
       <div class="container">
         <div class="featured-title">
           <h1>Trabalhos mais recentes</h1>
@@ -103,22 +116,35 @@
         </div>
         <div class="row">
           <div class="col-md-4">
-            <div style="width: 100%; height: 300px; border: 1px solid #eee;"></div>
-            <h2>Heading</h2>
+            <a href="#">
+              <div class="item-portfolio">
+                <div style="width: 100%; height: 300px; border: 1px solid #ddd;"></div>
+                <h2>Heading</h2>
+              </div>
+            </a>
           </div>
           <div class="col-md-4">
-            <div style="width: 100%; height: 300px; border: 1px solid #eee;"></div>
-            <h2>Heading</h2>
-         </div>
+            <a href="#">
+              <div class="item-portfolio">
+                <div style="width: 100%; height: 300px; border: 1px solid #ddd;"></div>
+                <h2>Heading</h2>
+              </div>
+            </a>
+          </div>
           <div class="col-md-4">
-            <div style="width: 100%; height: 300px; border: 1px solid #eee;"></div>
-            <h2>Heading</h2>
+            <a href="#">
+              <div class="item-portfolio">
+                <div style="width: 100%; height: 300px; border: 1px solid #ddd;"></div>
+                <h2>Heading</h2>
+              </div>
+            </a>
           </div>
         </div>
         <a href="portfolio" class="btn btn-default">Ver mais</a>
-        <hr>
       </div>
     </section>
+
+    <hr>
 
     <section id="blog" class="featured">
       <div class="container">
@@ -144,7 +170,9 @@
       </div>
     </section>
 
-    <!-- <section id="parallax" data-speed="5">
+    <!-- <hr>
+
+    <section id="parallax" data-speed="5">
       <div class="vAlign">
         <div class="vBox">
           <h1>Hello World!</h1>
@@ -152,26 +180,30 @@
         </div>
       </div>
     </section> -->
+    
+    <hr>
 
-    <section id="contato" class="featured">
+    <section id="contato" class="featured dark">
       <div class="container">
         <div class="featured-title">
           <h1>Fale comigo</h1>
           <div class="linha-discreta"></div>
           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
         </div>
-        <div class="row">
-          <div class="col-md-6 align-right"><input type="text" placeholder="nome"></div>
-          <div class="col-md-6 align-left"><input type="text" placeholder="e-mail"></div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <textarea class="form-control" rows="3">mensagem</textarea>
+        <form class="form-contato">
+          <div class="row">
+            <div class="col-md-6 align-center"><input type="text" placeholder="nome"></div>
+            <div class="col-md-6 align-center"><input type="text" placeholder="e-mail"></div>
           </div>
-        </div>
-        <div class="row">
-          <p><a href="#" class="btn btn-primary btn-large">enviar</a></p>
-        </div>
+          <div class="row">
+            <div class="col-md-12">
+              <textarea class="form-control" rows="3" placeholder="mensagem"></textarea>
+            </div>
+          </div>
+          <div class="row">
+            <p><a href="#" class="btn btn-primary btn-large">enviar</a></p>
+          </div>
+        </form>
       </div>
     </section>
 
@@ -196,5 +228,8 @@
     <script src="js/smoothscroll.js"></script>
     <!-- Parallax -->
     <script src="js/parallax.js"></script>
+    <!-- vTicker -->
+    <script src="js/vticker/jquery.vticker.js"></script>
+    <script src="js/vticker.js"></script>
   </body>
 </html>
