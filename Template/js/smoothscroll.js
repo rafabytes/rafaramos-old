@@ -28,7 +28,7 @@ $("a[href^='#intro']").on('click', function(e) {
 
    // animate
    $('html, body').animate({
-       scrollTop: $(this.hash).offset().top -50 
+       scrollTop: $(this.hash).offset().top
      }, 500, function(){
 
        // when done, add hash to url

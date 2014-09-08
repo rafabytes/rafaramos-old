@@ -7,7 +7,6 @@
    ========================================================================== */
 body {
   position: relative;
-  padding-top: 50px;
   color: #2c3e50;
   font-family: "Source Code Pro", sans-serif; }
 
@@ -68,8 +67,26 @@ footer {
    Personalizando o bootstrap
    ========================================================================== */
 .navbar-default {
-  background-color: rgba(255, 255, 255, 0.95);
-  border: none; }
+  background-color: rgba(255, 255, 255, 0);
+  border: none;
+  -o-transition: .25s;
+  -ms-transition: .25s;
+  -moz-transition: .25s;
+  -webkit-transition: .25s; }
+  .navbar-default li:first-child {
+    display: none; }
+  .navbar-default a {
+    color: #fff !important; }
+    .navbar-default a:hover {
+      color: #e6e6e6 !important; }
+  .navbar-default .active a {
+    background-color: rgba(200, 200, 200, 0.5) !important; }
+  .navbar-default.sticky {
+    background-color: rgba(255, 255, 255, 0.95); }
+    .navbar-default.sticky a {
+      color: #34495e !important; }
+      .navbar-default.sticky a:hover {
+        color: #2c3e50 !important; }
 
 .btn {
   font-family: "VT323";

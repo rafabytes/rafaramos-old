@@ -16,7 +16,7 @@ $cinza: #e6e6e6;
 
 body {
 	position: relative;
-	padding-top: 50px;
+	// padding-top: 50px;
 	color: $cor-secundaria;
 	font-family: $fonte-corpo;
 }
@@ -89,8 +89,33 @@ footer {
    ========================================================================== */
 
 .navbar-default {
-	background-color: rgba(255,255,255,.95);
+	background-color: rgba(255,255,255,.0);
 	border: none;
+	-o-transition:.25s;
+	-ms-transition:.25s;
+	-moz-transition:.25s;
+	-webkit-transition:.25s;
+	li:first-child {
+		display: none;
+	}
+	a {
+		color: $branco !important;
+		&:hover {
+			color: $cinza !important;
+		}
+	}
+	.active a {
+		background-color: rgba(200,200,200,.5) !important;
+	}
+	&.sticky {
+		background-color: rgba(255,255,255,.95);
+		a {
+			color: $cor-primaria !important;
+			&:hover {
+				color: $cor-secundaria !important;
+			}
+		}
+	}
 }
 
 .btn {

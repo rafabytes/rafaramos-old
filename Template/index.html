@@ -50,6 +50,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+            <li><a href="#intro">&nbsp;</a></li>
             <li><a href="#sobre">Sobre</a></li>
             <li><a href="#portfolio">Portfolio</a></li>
             <li><a href="#blog">Blog</a></li>
@@ -222,6 +223,27 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+
+      var menu = $('.navbar');
+      var offSet = 550;
+
+      function scroll() {
+        if ($(window).scrollTop() >= offSet) {
+          $('.navbar').addClass('sticky');
+        } 
+        if ($(window).scrollTop() < offSet) {
+          $('.navbar').removeClass('sticky');
+          $('li:first').removeClass('active');
+        }
+      }
+
+      document.onscroll = scroll;
+
+    </script>
+
+
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="js/ie10-viewport-bug-workaround.js"></script>
     <!-- Smooth Scrolling -->
