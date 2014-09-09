@@ -37,6 +37,13 @@ footer {
   color: #e6e6e6;
   text-align: center;
   background-color: #2c3e50; }
+  footer a {
+    color: #fff; }
+    footer a:hover {
+      color: #fff;
+      opacity: .8; }
+  footer i {
+    padding: 5px; }
 
 /* ==========================================================================
    Classes de apoio
@@ -73,8 +80,6 @@ footer {
   -ms-transition: .25s;
   -moz-transition: .25s;
   -webkit-transition: .25s; }
-  .navbar-default li:first-child {
-    display: none; }
   .navbar-default a {
     color: #fff !important; }
     .navbar-default a:hover {
@@ -96,8 +101,9 @@ footer {
   background-color: #34495e;
   border-color: #2c3e50; }
   .btn-primary:hover {
-    background-color: #34495e;
-    border-color: #2c3e50;
+    color: #34495e;
+    background-color: #e6e6e6;
+    border-color: #34495e;
     opacity: .9; }
 
 .btn-large {

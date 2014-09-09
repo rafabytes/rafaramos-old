@@ -14,7 +14,7 @@
     pause: 3000,
     showItems: 1,
     mousePause: false,
-    height: 100,
+    height: 0,
     animate: true,
     margin: 0,
     padding: 0,
