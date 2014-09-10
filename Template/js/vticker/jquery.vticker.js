@@ -14,10 +14,10 @@
     pause: 3000,
     showItems: 1,
     mousePause: false,
-    height: 0,
+    height: 100,
     animate: true,
     margin: 0,
-    padding: 0,
+    padding: 1,
     startPaused: false
   };
 
