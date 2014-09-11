@@ -145,6 +145,7 @@ footer {
 		background-repeat: no-repeat;
 		background-size: cover;
 		background-attachment: fixed;
+		background-position: 50% 50%;
 		.overlay {
 			background-color: rgba(52,73,94,0.5);
 		}
@@ -183,7 +184,7 @@ footer {
 }
 
 /* ==========================================================================
-   Página principal
+   Homepage
    ========================================================================== */
 
 section.featured {
@@ -211,6 +212,7 @@ section.featured {
 	background-repeat: no-repeat;
 	background-size: cover;
 	background-attachment: fixed;
+	background-position: 50% 50%;
 	&.jumbotron {
 		padding: 0;
 		margin-bottom: 0;

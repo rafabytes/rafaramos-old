@@ -108,7 +108,8 @@ footer {
     background-image: url("../images/background-blurred.jpg");
     background-repeat: no-repeat;
     background-size: cover;
-    background-attachment: fixed; }
+    background-attachment: fixed;
+    background-position: 50% 50%; }
     .navbar-default.sticky .overlay {
       background-color: rgba(52, 73, 94, 0.5); }
 
@@ -133,7 +134,7 @@ footer {
   padding-right: 20px; }
 
 /* ==========================================================================
-   Página principal
+   Homepage
    ========================================================================== */
 section.featured {
   padding: 50px 0;
@@ -155,7 +156,8 @@ section.featured {
   background-image: url("../images/background-blurred.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  background-attachment: fixed; }
+  background-attachment: fixed;
+  background-position: 50% 50%; }
   #intro.jumbotron {
     padding: 0;
     margin-bottom: 0; }
