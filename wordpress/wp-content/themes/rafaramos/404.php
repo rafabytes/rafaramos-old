@@ -1,23 +1,42 @@
-<?php get_header() ?>
+<?php get_header(); ?>
+			
+			<div id="content" class="clearfix row">
+			
+				<div id="main" class="col-sm-12 clearfix" role="main">
 
-	<div id="container">
-		<div id="content">
+					<article id="post-not-found" class="clearfix">
+						
+						<header>
 
-			<div id="post-0" class="post error404 not-found">
-				<h2 class="entry-title"><?php _e( 'Not Found', 'sandbox' ) ?></h2>
-				<div class="entry-content">
-					<p><?php _e( 'Apologies, but we were unable to find what you were looking for. Perhaps  searching will help.', 'sandbox' ) ?></p>
-				</div>
-				<form id="searchform-404" class="blog-search" method="get" action="<?php bloginfo('home') ?>">
-					<div>
-						<input id="s-404" name="s" class="text" type="text" value="<?php the_search_query() ?>" size="40" />
-						<input class="button" type="submit" value="<?php _e( 'Find', 'sandbox' ) ?>" />
-					</div>
-				</form>
-			</div><!-- .post -->
+							<div class="hero-unit">
+							
+								<h1><?php _e("Epic 404 - Article Not Found","wpbootstrap"); ?></h1>
+								<p><?php _e("This is embarassing. We can't find what you were looking for.","wpbootstrap"); ?></p>
+															
+							</div>
+													
+						</header> <!-- end article header -->
+					
+						<section class="post_content">
+							
+							<p><?php _e("Whatever you were looking for was not found, but maybe try looking again or search using the form below.","wpbootstrap"); ?></p>
 
-		</div><!-- #content -->
-	</div><!-- #container -->
+							<div class="row">
+								<div class="col col-lg-12">
+									<?php get_search_form(); ?>
+								</div>
+							</div>
+					
+						</section> <!-- end article section -->
+						
+						<footer>
+							
+						</footer> <!-- end article footer -->
+					
+					</article> <!-- end article -->
+			
+				</div> <!-- end #main -->
+    
+			</div> <!-- end #content -->
 
-<?php get_sidebar() ?>
-<?php get_footer() ?>
+<?php get_footer(); ?>

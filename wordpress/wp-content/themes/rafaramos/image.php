@@ -1,55 +1,143 @@
-<?php get_header() ?>
+<?php
+/**
+ * The WordPress template hierarchy first checks for any
+ * MIME-types and then looks for the attachment.php file.
+ *
+ * @link codex.wordpress.org/Template_Hierarchy#Attachment_display 
+ */ 
 
-	<div id="container">
-		<div id="content">
+get_header(); ?>
+			
+			<div id="content" class="clearfix row">
+			
+				<div id="main" class="col-sm-8 clearfix" role="main">
 
-<?php the_post() ?>
-
-			<h2 class="page-title"><a href="<?php echo get_permalink($post->post_parent) ?>" title="<?php printf( __( 'Return to %s', 'sandbox' ), wp_specialchars( get_the_title($post->post_parent), 1 ) ) ?>" rev="attachment"><?php echo get_the_title($post->post_parent) ?></a></h2>
-
-			<div id="post-<?php the_ID() ?>" class="<?php sandbox_post_class() ?>">
-				<h3 class="entry-title"><?php the_title() ?></h3>
-				<div class="entry-content">
-					<div class="entry-attachment"><a href="<?php echo wp_get_attachment_url($post->ID); ?>" title="<?php echo wp_specialchars( get_the_title($post->ID), 1 ) ?>" rel="attachment"><?php echo wp_get_attachment_image( $post->ID, 'medium' ); ?></a></div>
-					<div class="entry-caption"><?php if ( !empty($post->post_excerpt) ) the_excerpt() ?></div>
-<?php the_content() ?>
-
+					<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
+					
+					<article id="post-<?php the_ID(); ?>" <?php post_class('clearfix'); ?> role="article" itemscope itemtype="http://schema.org/BlogPosting">
+						
+						<header> 
+							
+							<div class="page-header"><h1 class="single-title" itemprop="headline"><a href="<?php echo get_permalink($post->post_parent); ?>" rev="attachment"><?php echo get_the_title($post->post_parent); ?></a> &raquo; <?php the_title(); ?></h1></div>
+							
+							<p class="meta"><?php _e("Posted", "wpbootstrap"); ?> <time datetime="<?php echo the_time('Y-m-j'); ?>" pubdate><?php the_time(); ?></time> <?php _e("by", "wpbootstrap"); ?> <?php the_author_posts_link(); ?>.</p>
+						
+						</header> <!-- end article header -->
+					
+						<section class="post_content clearfix" itemprop="articleBody">
+							
+							<!-- To display current image in the photo gallery -->
+							<div class="attachment-img">
+							      <a href="<?php echo wp_get_attachment_url($post->ID); ?>">
+							      							      
+							      <?php 
+							      	$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'large' ); 
+							       
+								      if ($image) : ?>
+								          <img src="<?php echo $image[0]; ?>" alt="" />
+								      <?php endif; ?>
+							      
+							      </a>
+							</div>
+							
+							<!-- To display thumbnail of previous and next image in the photo gallery -->
+							<ul id="gallery-nav" class="clearfix">
+								<li class="next pull-left"><?php next_image_link() ?></li>
+								<li class="previous pull-right"><?php previous_image_link() ?></li>
+							</ul>
+							
+						</section> <!-- end article section -->
+						
+						<footer>
+			
+							<?php the_tags('<p class="tags"><span class="tags-title">' . __("Tags","wpbootstrap") . ':</span> ', ' ', '</p>'); ?>
+							
+						</footer> <!-- end article footer -->
+					
+					</article> <!-- end article -->
+					
+					<?php comments_template(); ?>
+					
+					<?php endwhile; ?>			
+					
+					<?php else : ?>
+					
+					<article id="post-not-found">
+					    <header>
+					    	<h1><?php _e("Not Found", "wpbootstrap"); ?></h1>
+					    </header>
+					    <section class="post_content">
+					    	<p><?php _e("Sorry, but the requested resource was not found on this site.", "wpbootstrap"); ?></p>
+					    </section>
+					    <footer>
+					    </footer>
+					</article>
+					
+					<?php endif; ?>
+			
+				</div> <!-- end #main -->
+				
+				<div id="sidebar1" class="col col-lg-4 fluid-sidebar sidebar" role="complementary">
+				
+					<?php if ( !empty($post->post_excerpt) ) { ?> 
+					<p class="alert alert-block success"><?php echo get_the_excerpt(); ?></p>
+					<?php } ?>
+								
+					<!-- Using WordPress functions to retrieve the extracted EXIF information from database -->
+					<div class="well">
+					
+						<h3><?php _e("Image metadata","wpbootstrap"); ?></h3>
+					
+					   <?php
+					      $imgmeta = wp_get_attachment_metadata( $id );
+					
+					// Convert the shutter speed retrieve from database to fraction
+							if (($imgmeta['shutter_speed']) != 0) {
+								if ((1 / $imgmeta['image_meta']['shutter_speed']) > 1)
+								{
+									if ((number_format((1 / $imgmeta['image_meta']['shutter_speed']), 1)) == 1.3
+									or number_format((1 / $imgmeta['image_meta']['shutter_speed']), 1) == 1.5
+									or number_format((1 / $imgmeta['image_meta']['shutter_speed']), 1) == 1.6
+									or number_format((1 / $imgmeta['image_meta']['shutter_speed']), 1) == 2.5)
+									{
+										$pshutter = "1/" . number_format((1 / $imgmeta['image_meta']['shutter_speed']), 1, '.', '') . " second";
+									} else {
+										$pshutter = "1/" . number_format((1 / $imgmeta['image_meta']['shutter_speed']), 0, '.', '') . " second";
+									}
+									} else {
+										$pshutter = $imgmeta['image_meta']['shutter_speed'] . " seconds";
+									}
+								}
+							else {
+								echo("Shutter Speed Unavailable");
+							}
+					
+					// Start to display EXIF and IPTC data of digital photograph
+					       if ( $imgmeta['image_meta']['created_timestamp'] ) { 
+					           echo __("Date Taken","wpbootstrap") . ": " . date("d-M-Y H:i:s", $imgmeta['image_meta']['created_timestamp'])."<br />"; }
+					       if ( $imgmeta['image_meta']['copyright'] ) { 
+					           echo __("Copyright","wpbootstrap") . ": " . $imgmeta['image_meta']['copyright']."<br />"; }
+					       if ( $imgmeta['image_meta']['credit'] ) { 
+					           echo __("Credit","wpbootstrap") . ": " . $imgmeta['image_meta']['credit']."<br />"; }
+					       if ( $imgmeta['image_meta']['title'] ) { 
+					           echo __("Title","wpbootstrap") . ": " . $imgmeta['image_meta']['title']."<br />"; }
+					       if ( $imgmeta['image_meta']['caption'] ) { 
+					           echo __("Caption","wpbootstrap") . ": " . $imgmeta['image_meta']['caption']."<br />"; }
+					       if ( $imgmeta['image_meta']['camera'] ) { 
+					           echo __("Camera","wpbootstrap") . ": " . $imgmeta['image_meta']['camera']."<br />"; }
+					       if ( $imgmeta['image_meta']['focal_length'] ) { 
+					           echo __("Focal Length","wpbootstrap") . ": " . $imgmeta['image_meta']['focal_length']."mm<br />"; }
+					       if ( $imgmeta['image_meta']['aperture'] ) { 
+					           echo __("Aperture","wpbootstrap") . ": f/" . $imgmeta['image_meta']['aperture']."<br />"; }
+					       if ( $imgmeta['image_meta']['iso'] ) { 
+					           echo __("ISO","wpbootstrap") . ": " . $imgmeta['image_meta']['iso']."<br />"; }
+					       if ( $pshutter ) { 
+					           echo __("Shutter Speed","wpbootstrap") . ": " . $pshutter . "<br />"; }
+					   ?>
+					</div>
+					
 				</div>
+    
+			</div> <!-- end #content -->
 
-				<div class="entry-meta">
-					<?php printf( __( 'Posted by %1$s on <abbr class="published" title="%2$sT%3$s">%4$s at %5$s</abbr>. Bookmark the <a href="%6$s" title="Permalink to %7$s" rel="bookmark">permalink</a>. Follow any comments here with the <a href="%8$s" title="Comments RSS to %7$s" rel="alternate" type="application/rss+xml">RSS feed for this post</a>.', 'sandbox' ),
-						'<span class="author vcard"><a class="url fn n" href="' . get_author_link( false, $authordata->ID, $authordata->user_nicename ) . '" title="' . sprintf( __( 'View all posts by %s', 'sandbox' ), $authordata->display_name ) . '">' . get_the_author() . '</a></span>',
-						get_the_time('Y-m-d'),
-						get_the_time('H:i:sO'),
-						the_date( '', '', '', false ),
-						get_the_time(),
-						get_permalink(),
-						the_title_attribute('echo=0'),
-						comments_rss() ) ?>
-
-<?php if ( ('open' == $post->comment_status) && ('open' == $post->ping_status) ) : // Comments and trackbacks open ?>
-					<?php printf( __( '<a class="comment-link" href="#respond" title="Post a comment">Post a comment</a> or leave a trackback: <a class="trackback-link" href="%s" title="Trackback URL for your post" rel="trackback">Trackback URL</a>.', 'sandbox' ), get_trackback_url() ) ?>
-<?php elseif ( !('open' == $post->comment_status) && ('open' == $post->ping_status) ) : // Only trackbacks open ?>
-					<?php printf( __( 'Comments are closed, but you can leave a trackback: <a class="trackback-link" href="%s" title="Trackback URL for your post" rel="trackback">Trackback URL</a>.', 'sandbox' ), get_trackback_url() ) ?>
-<?php elseif ( ('open' == $post->comment_status) && !('open' == $post->ping_status) ) : // Only comments open ?>
-					<?php _e( 'Trackbacks are closed, but you can <a class="comment-link" href="#respond" title="Post a comment">post a comment</a>.', 'sandbox' ) ?>
-<?php elseif ( !('open' == $post->comment_status) && !('open' == $post->ping_status) ) : // Comments and trackbacks closed ?>
-					<?php _e( 'Both comments and trackbacks are currently closed.', 'sandbox' ) ?>
-<?php endif; ?>
-<?php edit_post_link( __( 'Edit', 'sandbox' ), "\n\t\t\t\t\t<span class=\"edit-link\">", "</span>" ) ?>
-
-				</div>
-			</div><!-- .post -->
-
-			<div id="nav-images" class="navigation">
-				<div class="nav-previous"><?php previous_image_link() ?></div>
-				<div class="nav-next"><?php next_image_link() ?></div>
-			</div>
-
-<?php comments_template() ?>
-
-		</div><!-- #content -->
-	</div><!-- #container -->
-
-<?php get_sidebar() ?>
-<?php get_footer() ?>
+<?php get_footer(); ?>

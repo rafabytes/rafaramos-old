@@ -1,510 +1,573 @@
 <?php
 /*
-This file is part of SANDBOX.
+Author: Eddie Machado
+URL: htp://themble.com/bones/
 
-SANDBOX is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any later version.
-
-SANDBOX is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with SANDBOX. If not, see http://www.gnu.org/licenses/.
+This is where you can drop your custom functions or
+just edit things like thumbnail sizes, header images, 
+sidebars, comments, ect.
 */
 
-// Produces a list of pages in the header without whitespace
-function sandbox_globalnav() {
-	if ( $menu = str_replace( array( "\r", "\n", "\t" ), '', wp_list_pages('title_li=&sort_column=menu_order&echo=0') ) )
-		$menu = '<ul>' . $menu . '</ul>';
-	$menu = '<div id="menu">' . $menu . "</div>\n";
-	echo apply_filters( 'globalnav_menu', $menu ); // Filter to override default globalnav: globalnav_menu
+// Get Bones Core Up & Running!
+require_once('library/bones.php');            // core functions (don't remove)
+
+// Shortcodes
+require_once('library/shortcodes.php');
+
+// Admin Functions (commented out by default)
+// require_once('library/admin.php');         // custom admin functions
+
+// Custom Backend Footer
+add_filter('admin_footer_text', 'wp_bootstrap_custom_admin_footer');
+function wp_bootstrap_custom_admin_footer() {
+	echo '<span id="footer-thankyou">Developed by <a href="http://320press.com" target="_blank">320press</a></span>. Built using <a href="http://themble.com/bones" target="_blank">Bones</a>.';
 }
 
-// Generates semantic classes for BODY element
-function sandbox_body_class( $print = true ) {
-	global $wp_query, $current_user;
+// adding it to the admin area
+add_filter('admin_footer_text', 'wp_bootstrap_custom_admin_footer');
 
-	// It's surely a WordPress blog, right?
-	$c = array('wordpress');
+// Set content width
+if ( ! isset( $content_width ) ) $content_width = 580;
 
-	// Applies the time- and date-based classes (below) to BODY element
-	sandbox_date_classes( time(), $c );
+/************* THUMBNAIL SIZE OPTIONS *************/
 
-	// Generic semantic classes for what type of content is displayed
-	is_front_page()  ? $c[] = 'home'       : null; // For the front page, if set
-	is_home()        ? $c[] = 'blog'       : null; // For the blog posts page, if set
-	is_archive()     ? $c[] = 'archive'    : null;
-	is_date()        ? $c[] = 'date'       : null;
-	is_search()      ? $c[] = 'search'     : null;
-	is_paged()       ? $c[] = 'paged'      : null;
-	is_attachment()  ? $c[] = 'attachment' : null;
-	is_404()         ? $c[] = 'four04'     : null; // CSS does not allow a digit as first character
+// Thumbnail sizes
+add_image_size( 'blog-destacada', 690, 333, true );
+// add_image_size( 'wpbs-featured-home', 970, 311, true);
+// add_image_size( 'wpbs-featured-carousel', 970, 400, true);
 
-	// Special classes for BODY element when a single post
-	if ( is_single() ) {
-		$postID = $wp_query->post->ID;
-		the_post();
+/* 
+to add more sizes, simply copy a line from above 
+and change the dimensions & name. As long as you
+upload a "featured image" as large as the biggest
+set width or height, all the other sizes will be
+auto-cropped.
 
-		// Adds 'single' class and class with the post ID
-		$c[] = 'single postid-' . $postID;
+To call a different size, simply change the text
+inside the thumbnail function.
 
-		// Adds classes for the month, day, and hour when the post was published
-		if ( isset( $wp_query->post->post_date ) )
-			sandbox_date_classes( mysql2date( 'U', $wp_query->post->post_date ), $c, 's-' );
+For example, to call the 300 x 300 sized image, 
+we would use the function:
+<?php the_post_thumbnail( 'bones-thumb-300' ); ?>
+for the 600 x 100 image:
+<?php the_post_thumbnail( 'bones-thumb-600' ); ?>
 
-		// Adds category classes for each category on single posts
-		if ( $cats = get_the_category() )
-			foreach ( $cats as $cat )
-				$c[] = 's-category-' . $cat->slug;
+You can change the names and dimensions to whatever
+you like. Enjoy!
+*/
 
-		// Adds tag classes for each tags on single posts
-		if ( $tags = get_the_tags() )
-			foreach ( $tags as $tag )
-				$c[] = 's-tag-' . $tag->slug;
+/************* CUSTOM POST TYPES ********************/
 
-		// Adds MIME-specific classes for attachments
-		if ( is_attachment() ) {
-			$mime_type = get_post_mime_type();
-			$mime_prefix = array( 'application/', 'image/', 'text/', 'audio/', 'video/', 'music/' );
-				$c[] = 'attachmentid-' . $postID . ' attachment-' . str_replace( $mime_prefix, "", "$mime_type" );
-		}
+register_post_type(
+  'portfolio',
+  array(
+    'labels' => array(
+      'name' => 'Portfolio',
+      'singular_name' => 'Portfolio'
+    ),
+    'public' => true,
+    'menu_icon' => 'dashicons-portfolio',
+    'has_archive' => true,
+    'rewrite' => array('slug' => 'projeto', 'with_front' => false),
+    'hierarchical' => false,
+    'supports' => array('title', 'editor', 'thumbnail'),
+    'can_export' => true,
+    'show_in_nav_menus' => true,
+  )
+);
 
-		// Adds author class for the post author
-		$c[] = 's-author-' . sanitize_title_with_dashes(strtolower(get_the_author_login()));
-		rewind_posts();
-	}
+register_taxonomy('portfolio_category', 'portfolio', array('hierarchical' => true, 'label' => 'Categories', 'query_var' => true, 'rewrite' => true));
 
-	// Author name classes for BODY on author archives
-	elseif ( is_author() ) {
-		$author = $wp_query->get_queried_object();
-		$c[] = 'author';
-		$c[] = 'author-' . $author->user_nicename;
-	}
+register_post_type(
+  'evento',
+  array(
+    'labels' => array(
+      'name' => 'Events',
+      'singular_name' => 'Event'
+    ),
+    'public' => true,
+    'menu_icon' => 'dashicons-calendar',
+    'has_archive' => true,
+    'rewrite' => array('slug' => 'evento', 'with_front' => false),
+    'hierarchical' => false,
+    'supports' => array('title', 'editor', 'thumbnail'),
+    'can_export' => true,
+    'show_in_nav_menus' => true,
+  )
+);
 
-	// Category name classes for BODY on category archvies
-	elseif ( is_category() ) {
-		$cat = $wp_query->get_queried_object();
-		$c[] = 'category';
-		$c[] = 'category-' . $cat->slug;
-	}
+register_taxonomy('categorias_dos_eventos', 'evento', array('hierarchical' => true, 'label' => 'Categories', 'query_var' => true, 'rewrite' => true));
 
-	// Tag name classes for BODY on tag archives
-	elseif ( is_tag() ) {
-		$tags = $wp_query->get_queried_object();
-		$c[] = 'tag';
-		$c[] = 'tag-' . $tags->slug;
-	}
+/************* ACTIVE SIDEBARS ********************/
 
-	// Page author for BODY on 'pages'
-	elseif ( is_page() ) {
-		$pageID = $wp_query->post->ID;
-		$page_children = wp_list_pages("child_of=$pageID&echo=0");
-		the_post();
-		$c[] = 'page pageid-' . $pageID;
-		$c[] = 'page-author-' . sanitize_title_with_dashes(strtolower(get_the_author('login')));
-		// Checks to see if the page has children and/or is a child page; props to Adam
-		if ( $page_children )
-			$c[] = 'page-parent';
-		if ( $wp_query->post->post_parent )
-			$c[] = 'page-child parent-pageid-' . $wp_query->post->post_parent;
-		if ( is_page_template() ) // Hat tip to Ian, themeshaper.com
-			$c[] = 'page-template page-template-' . str_replace( '.php', '-php', get_post_meta( $pageID, '_wp_page_template', true ) );
-		rewind_posts();
-	}
+// Sidebars & Widgetizes Areas
+function wp_bootstrap_register_sidebars() {
+    register_sidebar(array(
+    	'id' => 'sidebar1',
+    	'name' => 'Main Sidebar',
+    	'description' => 'Used on every page BUT the homepage page template.',
+    	'before_widget' => '<div id="%1$s" class="widget %2$s">',
+    	'after_widget' => '</div>',
+    	'before_title' => '<h4 class="widgettitle">',
+    	'after_title' => '</h4>',
+    ));
+    
+    register_sidebar(array(
+    	'id' => 'sidebar2',
+    	'name' => 'Homepage Sidebar',
+    	'description' => 'Used only on the homepage page template.',
+    	'before_widget' => '<div id="%1$s" class="widget %2$s">',
+    	'after_widget' => '</div>',
+    	'before_title' => '<h4 class="widgettitle">',
+    	'after_title' => '</h4>',
+    ));
+    
+    register_sidebar(array(
+      'id' => 'footer1',
+      'name' => 'Footer 1',
+      'before_widget' => '<div id="%1$s" class="widget col-sm-4 %2$s">',
+      'after_widget' => '</div>',
+      'before_title' => '<h4 class="widgettitle">',
+      'after_title' => '</h4>',
+    ));
 
-	// Search classes for results or no results
-	elseif ( is_search() ) {
-		the_post();
-		if ( have_posts() ) {
-			$c[] = 'search-results';
-		} else {
-			$c[] = 'search-no-results';
-		}
-		rewind_posts();
-	}
+    register_sidebar(array(
+      'id' => 'footer2',
+      'name' => 'Footer 2',
+      'before_widget' => '<div id="%1$s" class="widget col-sm-4 %2$s">',
+      'after_widget' => '</div>',
+      'before_title' => '<h4 class="widgettitle">',
+      'after_title' => '</h4>',
+    ));
 
-	// For when a visitor is logged in while browsing
-	if ( $current_user->ID )
-		$c[] = 'loggedin';
+    register_sidebar(array(
+      'id' => 'footer3',
+      'name' => 'Footer 3',
+      'before_widget' => '<div id="%1$s" class="widget col-sm-4 %2$s">',
+      'after_widget' => '</div>',
+      'before_title' => '<h4 class="widgettitle">',
+      'after_title' => '</h4>',
+    ));
+    
+    
+    /* 
+    to add more sidebars or widgetized areas, just copy
+    and edit the above sidebar code. In order to call 
+    your new sidebar just use the following code:
+    
+    Just change the name to whatever your new
+    sidebar's id is, for example:
+    
+    To call the sidebar in your template, you can just copy
+    the sidebar.php file and rename it to your sidebar's name.
+    So using the above example, it would be:
+    sidebar-sidebar2.php
+    
+    */
+} // don't remove this bracket!
 
-	// Paged classes; for 'page X' classes of index, single, etc.
-	if ( ( ( $page = $wp_query->get('paged') ) || ( $page = $wp_query->get('page') ) ) && $page > 1 ) {
-		// Thanks to Prentiss Riddle, twitter.com/pzriddle, for the security fix below.
-		$page = intval($page); // Ensures that an integer (not some dangerous script) is passed for the variable
-		$c[] = 'paged-' . $page;
-		if ( is_single() ) {
-			$c[] = 'single-paged-' . $page;
-		} elseif ( is_page() ) {
-			$c[] = 'page-paged-' . $page;
-		} elseif ( is_category() ) {
-			$c[] = 'category-paged-' . $page;
-		} elseif ( is_tag() ) {
-			$c[] = 'tag-paged-' . $page;
-		} elseif ( is_date() ) {
-			$c[] = 'date-paged-' . $page;
-		} elseif ( is_author() ) {
-			$c[] = 'author-paged-' . $page;
-		} elseif ( is_search() ) {
-			$c[] = 'search-paged-' . $page;
-		}
-	}
+/************* COMMENT LAYOUT *********************/
+		
+// Comment Layout
+function wp_bootstrap_comments($comment, $args, $depth) {
+   $GLOBALS['comment'] = $comment; ?>
+	<li <?php comment_class(); ?>>
+		<article id="comment-<?php comment_ID(); ?>" class="clearfix">
+			<div class="comment-author vcard clearfix">
+				<div class="avatar col-sm-3">
+					<?php echo get_avatar( $comment, $size='75' ); ?>
+				</div>
+				<div class="col-sm-9 comment-text">
+					<?php printf('<h4>%s</h4>', get_comment_author_link()) ?>
+					<?php edit_comment_link(__('Edit','wpbootstrap'),'<span class="edit-comment btn btn-sm btn-info"><i class="glyphicon-white glyphicon-pencil"></i>','</span>') ?>
+                    
+                    <?php if ($comment->comment_approved == '0') : ?>
+       					<div class="alert-message success">
+          				<p><?php _e('Your comment is awaiting moderation.','wpbootstrap') ?></p>
+          				</div>
+					<?php endif; ?>
+                    
+                    <?php comment_text() ?>
+                    
+                    <time datetime="<?php echo comment_time('Y-m-j'); ?>"><a href="<?php echo htmlspecialchars( get_comment_link( $comment->comment_ID ) ) ?>"><?php comment_time('F jS, Y'); ?> </a></time>
+                    
+					<?php comment_reply_link(array_merge( $args, array('depth' => $depth, 'max_depth' => $args['max_depth']))) ?>
+                </div>
+			</div>
+		</article>
+    <!-- </li> is added by wordpress automatically -->
+<?php
+} // don't remove this bracket!
 
-	// Separates classes with a single space, collates classes for BODY
-	$c = join( ' ', apply_filters( 'body_class',  $c ) ); // Available filter: body_class
+// Display trackbacks/pings callback function
+function list_pings($comment, $args, $depth) {
+       $GLOBALS['comment'] = $comment;
+?>
+        <li id="comment-<?php comment_ID(); ?>"><i class="icon icon-share-alt"></i>&nbsp;<?php comment_author_link(); ?>
+<?php 
 
-	// And tada!
-	return $print ? print($c) : $c;
 }
 
-// Generates semantic classes for each post DIV element
-function sandbox_post_class( $print = true ) {
-	global $post, $sandbox_post_alt;
+/************* SEARCH FORM LAYOUT *****************/
 
-	// hentry for hAtom compliace, gets 'alt' for every other post DIV, describes the post type and p[n]
-	$c = array( 'hentry', "p$sandbox_post_alt", $post->post_type, $post->post_status );
+/****************** password protected post form *****/
 
-	// Author for the post queried
-	$c[] = 'author-' . sanitize_title_with_dashes(strtolower(get_the_author('login')));
+add_filter( 'the_password_form', 'custom_password_form' );
 
-	// Category for the post queried
-	foreach ( (array) get_the_category() as $cat )
-		$c[] = 'category-' . $cat->slug;
-
-	// Tags for the post queried; if not tagged, use .untagged
-	if ( get_the_tags() == null ) {
-		$c[] = 'untagged';
-	} else {
-		foreach ( (array) get_the_tags() as $tag )
-			$c[] = 'tag-' . $tag->slug;
-	}
-
-	// For password-protected posts
-	if ( $post->post_password )
-		$c[] = 'protected';
-
-	// Applies the time- and date-based classes (below) to post DIV
-	sandbox_date_classes( mysql2date( 'U', $post->post_date ), $c );
-
-	// If it's the other to the every, then add 'alt' class
-	if ( ++$sandbox_post_alt % 2 )
-		$c[] = 'alt';
-
-	// Separates classes with a single space, collates classes for post DIV
-	$c = join( ' ', apply_filters( 'post_class', $c ) ); // Available filter: post_class
-
-	// And tada!
-	return $print ? print($c) : $c;
-}
-
-// Define the num val for 'alt' classes (in post DIV and comment LI)
-$sandbox_post_alt = 1;
-
-// Generates semantic classes for each comment LI element
-function sandbox_comment_class( $print = true ) {
-	global $comment, $post, $sandbox_comment_alt;
-
-	// Collects the comment type (comment, trackback),
-	$c = array( $comment->comment_type );
-
-	// Counts trackbacks (t[n]) or comments (c[n])
-	if ( $comment->comment_type == 'comment' ) {
-		$c[] = "c$sandbox_comment_alt";
-	} else {
-		$c[] = "t$sandbox_comment_alt";
-	}
-
-	// If the comment author has an id (registered), then print the log in name
-	if ( $comment->user_id > 0 ) {
-		$user = get_userdata($comment->user_id);
-		// For all registered users, 'byuser'; to specificy the registered user, 'commentauthor+[log in name]'
-		$c[] = 'byuser comment-author-' . sanitize_title_with_dashes(strtolower( $user->user_login ));
-		// For comment authors who are the author of the post
-		if ( $comment->user_id === $post->post_author )
-			$c[] = 'bypostauthor';
-	}
-
-	// If it's the other to the every, then add 'alt' class; collects time- and date-based classes
-	sandbox_date_classes( mysql2date( 'U', $comment->comment_date ), $c, 'c-' );
-	if ( ++$sandbox_comment_alt % 2 )
-		$c[] = 'alt';
-
-	// Separates classes with a single space, collates classes for comment LI
-	$c = join( ' ', apply_filters( 'comment_class', $c ) ); // Available filter: comment_class
-
-	// Tada again!
-	return $print ? print($c) : $c;
-}
-
-// Generates time- and date-based classes for BODY, post DIVs, and comment LIs; relative to GMT (UTC)
-function sandbox_date_classes( $t, &$c, $p = '' ) {
-	$t = $t + ( get_option('gmt_offset') * 3600 );
-	$c[] = $p . 'y' . gmdate( 'Y', $t ); // Year
-	$c[] = $p . 'm' . gmdate( 'm', $t ); // Month
-	$c[] = $p . 'd' . gmdate( 'd', $t ); // Day
-	$c[] = $p . 'h' . gmdate( 'H', $t ); // Hour
-}
-
-// For category lists on category archives: Returns other categories except the current one (redundant)
-function sandbox_cats_meow($glue) {
-	$current_cat = single_cat_title( '', false );
-	$separator = "\n";
-	$cats = explode( $separator, get_the_category_list($separator) );
-	foreach ( $cats as $i => $str ) {
-		if ( strstr( $str, ">$current_cat<" ) ) {
-			unset($cats[$i]);
-			break;
-		}
-	}
-	if ( empty($cats) )
-		return false;
-
-	return trim(join( $glue, $cats ));
-}
-
-// For tag lists on tag archives: Returns other tags except the current one (redundant)
-function sandbox_tag_ur_it($glue) {
-	$current_tag = single_tag_title( '', '',  false );
-	$separator = "\n";
-	$tags = explode( $separator, get_the_tag_list( "", "$separator", "" ) );
-	foreach ( $tags as $i => $str ) {
-		if ( strstr( $str, ">$current_tag<" ) ) {
-			unset($tags[$i]);
-			break;
-		}
-	}
-	if ( empty($tags) )
-		return false;
-
-	return trim(join( $glue, $tags ));
-}
-
-// Produces an avatar image with the hCard-compliant photo class
-function sandbox_commenter_link() {
-	$commenter = get_comment_author_link();
-	if ( ereg( '<a[^>]* class=[^>]+>', $commenter ) ) {
-		$commenter = ereg_replace( '(<a[^>]* class=[\'"]?)', '\\1url ' , $commenter );
-	} else {
-		$commenter = ereg_replace( '(<a )/', '\\1class="url "' , $commenter );
-	}
-	$avatar_email = get_comment_author_email();
-	$avatar_size = apply_filters( 'avatar_size', '32' ); // Available filter: avatar_size
-	$avatar = str_replace( "class='avatar", "class='photo avatar", get_avatar( $avatar_email, $avatar_size ) );
-	echo $avatar . ' <span class="fn n">' . $commenter . '</span>';
-}
-
-// Function to filter the default gallery shortcode
-function sandbox_gallery($attr) {
+function custom_password_form() {
 	global $post;
-	if ( isset($attr['orderby']) ) {
-		$attr['orderby'] = sanitize_sql_orderby($attr['orderby']);
-		if ( !$attr['orderby'] )
-			unset($attr['orderby']);
+	$label = 'pwbox-'.( empty( $post->ID ) ? rand() : $post->ID );
+	$o = '<div class="clearfix"><form class="protected-post-form" action="' . get_option('siteurl') . '/wp-login.php?action=postpass" method="post">
+	' . '<p>' . __( "This post is password protected. To view it please enter your password below:" ,'wpbootstrap') . '</p>' . '
+	<label for="' . $label . '">' . __( "Password:" ,'wpbootstrap') . ' </label><div class="input-append"><input name="post_password" id="' . $label . '" type="password" size="20" /><input type="submit" name="Submit" class="btn btn-primary" value="' . esc_attr__( "Submit",'wpbootstrap' ) . '" /></div>
+	</form></div>
+	';
+	return $o;
+}
+
+/*********** update standard wp tag cloud widget so it looks better ************/
+
+add_filter( 'widget_tag_cloud_args', 'my_widget_tag_cloud_args' );
+
+function my_widget_tag_cloud_args( $args ) {
+	$args['number'] = 20; // show less tags
+	$args['largest'] = 9.75; // make largest and smallest the same - i don't like the varying font-size look
+	$args['smallest'] = 9.75;
+	$args['unit'] = 'px';
+	return $args;
+}
+
+// filter tag clould output so that it can be styled by CSS
+function add_tag_class( $taglinks ) {
+    $tags = explode('</a>', $taglinks);
+    $regex = "#(.*tag-link[-])(.*)(' title.*)#e";
+
+    foreach( $tags as $tag ) {
+    	$tagn[] = preg_replace($regex, "('$1$2 label tag-'.get_tag($2)->slug.'$3')", $tag );
+    }
+
+    $taglinks = implode('</a>', $tagn);
+
+    return $taglinks;
+}
+
+add_action( 'wp_tag_cloud', 'add_tag_class' );
+
+add_filter( 'wp_tag_cloud','wp_tag_cloud_filter', 10, 2) ;
+
+function wp_tag_cloud_filter( $return, $args )
+{
+  return '<div id="tag-cloud">' . $return . '</div>';
+}
+
+// Enable shortcodes in widgets
+add_filter( 'widget_text', 'do_shortcode' );
+
+// Disable jump in 'read more' link
+function remove_more_jump_link( $link ) {
+	$offset = strpos($link, '#more-');
+	if ( $offset ) {
+		$end = strpos( $link, '"',$offset );
 	}
-
-	extract(shortcode_atts( array(
-		'orderby'    => 'menu_order ASC, ID ASC',
-		'id'         => $post->ID,
-		'itemtag'    => 'dl',
-		'icontag'    => 'dt',
-		'captiontag' => 'dd',
-		'columns'    => 3,
-		'size'       => 'thumbnail',
-	), $attr ));
-
-	$id           =  intval($id);
-	$orderby      =  addslashes($orderby);
-	$attachments  =  get_children("post_parent=$id&post_type=attachment&post_mime_type=image&orderby={$orderby}");
-
-	if ( empty($attachments) )
-		return null;
-
-	if ( is_feed() ) {
-		$output = "\n";
-		foreach ( $attachments as $id => $attachment )
-			$output .= wp_get_attachment_link( $id, $size, true ) . "\n";
-		return $output;
+	if ( $end ) {
+		$link = substr_replace( $link, '', $offset, $end-$offset );
 	}
+	return $link;
+}
+add_filter( 'the_content_more_link', 'remove_more_jump_link' );
 
-	$listtag     =  tag_escape($listtag);
-	$itemtag     =  tag_escape($itemtag);
-	$captiontag  =  tag_escape($captiontag);
-	$columns     =  intval($columns);
-	$itemwidth   =  $columns > 0 ? floor(100/$columns) : 100;
+// Remove height/width attributes on images so they can be responsive
+add_filter( 'post_thumbnail_html', 'remove_thumbnail_dimensions', 10 );
+add_filter( 'image_send_to_editor', 'remove_thumbnail_dimensions', 10 );
 
-	$output = apply_filters( 'gallery_style', "\n" . '<div class="gallery">', 9 ); // Available filter: gallery_style
+function remove_thumbnail_dimensions( $html ) {
+    $html = preg_replace( '/(width|height)=\"\d*\"\s/', "", $html );
+    return $html;
+}
 
-	foreach ( $attachments as $id => $attachment ) {
-		$img_lnk = get_attachment_link($id);
-		$img_src = wp_get_attachment_image_src( $id, $size );
-		$img_src = $img_src[0];
-		$img_alt = $attachment->post_excerpt;
-		if ( $img_alt == null )
-			$img_alt = $attachment->post_title;
-		$img_rel = apply_filters( 'gallery_img_rel', 'attachment' ); // Available filter: gallery_img_rel
-		$img_class = apply_filters( 'gallery_img_class', 'gallery-image' ); // Available filter: gallery_img_class
+// Add the Meta Box to the homepage template
+function add_homepage_meta_box() {  
+	global $post;
 
-		$output  .=  "\n\t" . '<' . $itemtag . ' class="gallery-item gallery-columns-' . $columns .'">';
-		$output  .=  "\n\t\t" . '<' . $icontag . ' class="gallery-icon"><a href="' . $img_lnk . '" title="' . $img_alt . '" rel="' . $img_rel . '"><img src="' . $img_src . '" alt="' . $img_alt . '" class="' . $img_class . ' attachment-' . $size . '" /></a></' . $icontag . '>';
+	// Only add homepage meta box if template being used is the homepage template
+	// $post_id = isset($_GET['post']) ? $_GET['post'] : (isset($_POST['post_ID']) ? $_POST['post_ID'] : "");
+	$post_id = $post->ID;
+	$template_file = get_post_meta($post_id,'_wp_page_template',TRUE);
 
-		if ( $captiontag && trim($attachment->post_excerpt) ) {
-			$output .= "\n\t\t" . '<' . $captiontag . ' class="gallery-caption">' . $attachment->post_excerpt . '</' . $captiontag . '>';
+	if ( $template_file == 'page-homepage.php' ){
+	    add_meta_box(  
+	        'homepage_meta_box', // $id  
+	        'Optional Homepage Tagline', // $title  
+	        'show_homepage_meta_box', // $callback  
+	        'page', // $page  
+	        'normal', // $context  
+	        'high'); // $priority  
+    }
+}
+
+add_action( 'add_meta_boxes', 'add_homepage_meta_box' );
+
+// Field Array  
+$prefix = 'custom_';  
+$custom_meta_fields = array(  
+    array(  
+        'label'=> 'Homepage tagline area',  
+        'desc'  => 'Displayed underneath page title. Only used on homepage template. HTML can be used.',  
+        'id'    => $prefix.'tagline',  
+        'type'  => 'textarea' 
+    )  
+);  
+
+// The Homepage Meta Box Callback  
+function show_homepage_meta_box() {  
+  global $custom_meta_fields, $post;
+
+  // Use nonce for verification
+  wp_nonce_field( basename( __FILE__ ), 'wpbs_nonce' );
+    
+  // Begin the field table and loop
+  echo '<table class="form-table">';
+
+  foreach ( $custom_meta_fields as $field ) {
+      // get value of this field if it exists for this post  
+      $meta = get_post_meta($post->ID, $field['id'], true);  
+      // begin a table row with  
+      echo '<tr> 
+              <th><label for="'.$field['id'].'">'.$field['label'].'</label></th> 
+              <td>';  
+              switch($field['type']) {  
+                  // text  
+                  case 'text':  
+                      echo '<input type="text" name="'.$field['id'].'" id="'.$field['id'].'" value="'.$meta.'" size="60" /> 
+                          <br /><span class="description">'.$field['desc'].'</span>';  
+                  break;
+                  
+                  // textarea  
+                  case 'textarea':  
+                      echo '<textarea name="'.$field['id'].'" id="'.$field['id'].'" cols="80" rows="4">'.$meta.'</textarea> 
+                          <br /><span class="description">'.$field['desc'].'</span>';  
+                  break;  
+              } //end switch  
+      echo '</td></tr>';  
+  } // end foreach  
+  echo '</table>'; // end table  
+}  
+
+// Save the Data  
+function save_homepage_meta( $post_id ) {  
+
+    global $custom_meta_fields;  
+  
+    // verify nonce  
+    if ( !isset( $_POST['wpbs_nonce'] ) || !wp_verify_nonce($_POST['wpbs_nonce'], basename(__FILE__)) )  
+        return $post_id;
+
+    // check autosave
+    if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE )
+        return $post_id;
+
+    // check permissions
+    if ( 'page' == $_POST['post_type'] ) {
+        if ( !current_user_can( 'edit_page', $post_id ) )
+            return $post_id;
+        } elseif ( !current_user_can( 'edit_post', $post_id ) ) {
+            return $post_id;
+    }
+  
+    // loop through fields and save the data  
+    foreach ( $custom_meta_fields as $field ) {
+        $old = get_post_meta( $post_id, $field['id'], true );
+        $new = $_POST[$field['id']];
+
+        if ($new && $new != $old) {
+            update_post_meta( $post_id, $field['id'], $new );
+        } elseif ( '' == $new && $old ) {
+            delete_post_meta( $post_id, $field['id'], $old );
+        }
+    } // end foreach
+}
+add_action( 'save_post', 'save_homepage_meta' );
+
+// Add thumbnail class to thumbnail links
+function add_class_attachment_link( $html ) {
+    $postid = get_the_ID();
+    $html = str_replace( '<a','<a class="thumbnail"',$html );
+    return $html;
+}
+add_filter( 'wp_get_attachment_link', 'add_class_attachment_link', 10, 1 );
+
+// Add lead class to first paragraph
+function first_paragraph( $content ){
+    global $post;
+
+    // if we're on the homepage, don't add the lead class to the first paragraph of text
+    if( is_page_template( 'page-homepage.php' ) )
+        return $content;
+    else
+        return preg_replace('/<p([^>]+)?>/', '<p$1 class="lead">', $content, 1);
+}
+add_filter( 'the_content', 'first_paragraph' );
+
+// Menu output mods
+class Bootstrap_walker extends Walker_Nav_Menu{
+
+  function start_el(&$output, $object, $depth = 0, $args = Array("navbar-right"), $current_object_id = 0){
+
+	 global $wp_query;
+	 $indent = ( $depth ) ? str_repeat( "\t", $depth ) : '';
+	
+	 $class_names = $value = '';
+	
+		// If the item has children, add the dropdown class for bootstrap
+		if ( $args->has_children ) {
+			$class_names = "dropdown ";
 		}
+	
+		$classes = empty( $object->classes ) ? array() : (array) $object->classes;
+		
+		$class_names .= join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $object ) );
+		$class_names = ' class="'. esc_attr( $class_names ) . '"';
+       
+   	$output .= $indent . '<li id="menu-item-'. $object->ID . '"' . $value . $class_names .'>';
 
-		$output .= "\n\t" . '</' . $itemtag . '>';
-		if ( $columns > 0 && ++$i % $columns == 0 )
-			$output .= "\n</div>\n" . '<div class="gallery">';
+   	$attributes  = ! empty( $object->attr_title ) ? ' title="'  . esc_attr( $object->attr_title ) .'"' : '';
+   	$attributes .= ! empty( $object->target )     ? ' target="' . esc_attr( $object->target     ) .'"' : '';
+   	$attributes .= ! empty( $object->xfn )        ? ' rel="'    . esc_attr( $object->xfn        ) .'"' : '';
+   	$attributes .= ! empty( $object->url )        ? ' href="'   . esc_attr( $object->url        ) .'"' : '';
+
+   	// if the item has children add these two attributes to the anchor tag
+   	// if ( $args->has_children ) {
+		  // $attributes .= ' class="dropdown-toggle" data-toggle="dropdown"';
+    // }
+
+    $item_output = $args->before;
+    $item_output .= '<a'. $attributes .'>';
+    $item_output .= $args->link_before .apply_filters( 'the_title', $object->title, $object->ID );
+    $item_output .= $args->link_after;
+
+    // if the item has children add the caret just before closing the anchor tag
+    if ( $args->has_children ) {
+    	$item_output .= '<b class="caret"></b></a>';
+    }
+    else {
+    	$item_output .= '</a>';
+    }
+
+    $item_output .= $args->after;
+
+    $output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $object, $depth, $args );
+  } // end start_el function
+        
+  function start_lvl(&$output, $depth = 0, $args = Array()) {
+    $indent = str_repeat("\t", $depth);
+    $output .= "\n$indent<ul class=\"dropdown-menu\">\n";
+  }
+      
+	function display_element( $element, &$children_elements, $max_depth, $depth=0, $args, &$output ){
+    $id_field = $this->db_fields['id'];
+    if ( is_object( $args[0] ) ) {
+        $args[0]->has_children = ! empty( $children_elements[$element->$id_field] );
+    }
+    return parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
+  }        
+}
+
+add_editor_style('editor-style.css');
+
+// Add Twitter Bootstrap's standard 'active' class name to the active nav link item
+add_filter('nav_menu_css_class', 'add_active_class', 10, 2 );
+
+function add_active_class($classes, $item) {
+	if( $item->menu_item_parent == 0 && in_array('current-menu-item', $classes) ) {
+    $classes[] = "active";
 	}
-	$output .= "\n</div>\n";
-
-	return $output;
+  
+  return $classes;
 }
 
-// Widget: Search; to match the Sandbox style and replace Widget plugin default
-function widget_sandbox_search($args) {
-	extract($args);
-	$options = get_option('widget_sandbox_search');
-	$title = empty($options['title']) ? __( 'Search', 'sandbox' ) : attribute_escape($options['title']);
-	$button = empty($options['button']) ? __( 'Find', 'sandbox' ) : attribute_escape($options['button']);
-?>
-			<?php echo $before_widget ?>
-				<?php echo $before_title ?><label for="s"><?php echo $title ?></label><?php echo $after_title ?>
-				<form id="searchform" class="blog-search" method="get" action="<?php bloginfo('home') ?>">
-					<div>
-						<input id="s" name="s" type="text" class="text" value="<?php the_search_query() ?>" size="10" tabindex="1" />
-						<input type="submit" class="button" value="<?php echo $button ?>" tabindex="2" />
-					</div>
-				</form>
-			<?php echo $after_widget ?>
-<?php
+// enqueue styles
+if( !function_exists("theme_styles") ) {  
+    function theme_styles() { 
+        // This is the compiled css file from LESS - this means you compile the LESS file locally and put it in the appropriate directory if you want to make any changes to the master bootstrap.css.
+        wp_register_style( 'bootstrap', get_template_directory_uri() . '/library/css/bootstrap.css', array(), '1.0', 'all' );
+        wp_enqueue_style( 'bootstrap' );
+
+        // For child themes
+        wp_register_style( 'wpbs-style', get_stylesheet_directory_uri() . '/style.css', array(), '1.0', 'all' );
+        wp_enqueue_style( 'wpbs-style' );
+    }
 }
+add_action( 'wp_enqueue_scripts', 'theme_styles' );
 
-// Widget: Search; element controls for customizing text within Widget plugin
-function widget_sandbox_search_control() {
-	$options = $newoptions = get_option('widget_sandbox_search');
-	if ( $_POST['search-submit'] ) {
-		$newoptions['title'] = strip_tags(stripslashes( $_POST['search-title']));
-		$newoptions['button'] = strip_tags(stripslashes( $_POST['search-button']));
-	}
-	if ( $options != $newoptions ) {
-		$options = $newoptions;
-		update_option( 'widget_sandbox_search', $options );
-	}
-	$title = attribute_escape($options['title']);
-	$button = attribute_escape($options['button']);
-?>
-	<p><label for="search-title"><?php _e( 'Title:', 'sandbox' ) ?> <input class="widefat" id="search-title" name="search-title" type="text" value="<?php echo $title; ?>" /></label></p>
-	<p><label for="search-button"><?php _e( 'Button Text:', 'sandbox' ) ?> <input class="widefat" id="search-button" name="search-button" type="text" value="<?php echo $button; ?>" /></label></p>
-	<input type="hidden" id="search-submit" name="search-submit" value="1" />
-<?php
+// enqueue javascript
+if( !function_exists( "theme_js" ) ) {  
+  function theme_js(){
+  
+    wp_register_script( 'bootstrap', 
+      get_template_directory_uri() . '/library/js/bootstrap.min.js', 
+      array('jquery'), 
+      '1.2' );
+  
+    wp_register_script( 'wpbs-scripts', 
+      get_template_directory_uri() . '/library/js/scripts.js', 
+      array('jquery'), 
+      '1.2' );
+  
+    wp_register_script(  'modernizr', 
+      get_template_directory_uri() . '/library/js/modernizr.full.min.js', 
+      array('jquery'), 
+      '1.2' );
+
+    wp_register_script(  'smoothscroll', 
+      get_template_directory_uri() . '/library/js/smoothscroll.js', 
+      array('jquery'), 
+      '1.2' );
+
+    wp_register_script(  'stickymenu', 
+      get_template_directory_uri() . '/library/js/stickymenu.js', 
+      array('jquery'), 
+      '1.2' );
+
+    wp_register_script(  'vticker', 
+      get_template_directory_uri() . '/library/js/vticker.js', 
+      array('jquery'), 
+      '1.2' );
+  
+    wp_enqueue_script('bootstrap');
+    wp_enqueue_script('wpbs-scripts');
+    wp_enqueue_script('modernizr');
+    wp_enqueue_script('smoothscroll');
+    wp_enqueue_script('stickymenu');
+    wp_enqueue_script('vticker');
+    
+  }
 }
+add_action( 'wp_enqueue_scripts', 'theme_js' );
 
-// Widget: Meta; to match the Sandbox style and replace Widget plugin default
-function widget_sandbox_meta($args) {
-	extract($args);
-	$options = get_option('widget_meta');
-	$title = empty($options['title']) ? __( 'Meta', 'sandbox' ) : attribute_escape($options['title']);
-?>
-			<?php echo $before_widget; ?>
-				<?php echo $before_title . $title . $after_title; ?>
-				<ul>
-					<?php wp_register() ?>
+// Get <head> <title> to behave like other themes
+function wp_bootstrap_wp_title( $title, $sep ) {
+  global $paged, $page;
 
-					<li><?php wp_loginout() ?></li>
-					<?php wp_meta() ?>
+  if ( is_feed() ) {
+    return $title;
+  }
 
-				</ul>
-			<?php echo $after_widget; ?>
-<?php
+  // Add the site name.
+  $title .= get_bloginfo( 'name' );
+
+  // Add the site description for the home/front page.
+  $site_description = get_bloginfo( 'description', 'display' );
+  if ( $site_description && ( is_home() || is_front_page() ) ) {
+    $title = "$title $sep $site_description";
+  }
+
+  // Add a page number if necessary.
+  if ( $paged >= 2 || $page >= 2 ) {
+    $title = "$title $sep " . sprintf( __( 'Page %s', 'wpbootstrap' ), max( $paged, $page ) );
+  }
+
+  return $title;
 }
-
-// Widget: RSS links; to match the Sandbox style
-function widget_sandbox_rsslinks($args) {
-	extract($args);
-	$options = get_option('widget_sandbox_rsslinks');
-	$title = empty($options['title']) ? __( 'RSS Links', 'sandbox' ) : attribute_escape($options['title']);
-?>
-		<?php echo $before_widget; ?>
-			<?php echo $before_title . $title . $after_title; ?>
-			<ul>
-				<li><a href="<?php bloginfo('rss2_url') ?>" title="<?php echo wp_specialchars( get_bloginfo('name'), 1 ) ?> <?php _e( 'Posts RSS feed', 'sandbox' ); ?>" rel="alternate" type="application/rss+xml"><?php _e( 'All posts', 'sandbox' ) ?></a></li>
-				<li><a href="<?php bloginfo('comments_rss2_url') ?>" title="<?php echo wp_specialchars(bloginfo('name'), 1) ?> <?php _e( 'Comments RSS feed', 'sandbox' ); ?>" rel="alternate" type="application/rss+xml"><?php _e( 'All comments', 'sandbox' ) ?></a></li>
-			</ul>
-		<?php echo $after_widget; ?>
-<?php
-}
-
-// Widget: RSS links; element controls for customizing text within Widget plugin
-function widget_sandbox_rsslinks_control() {
-	$options = $newoptions = get_option('widget_sandbox_rsslinks');
-	if ( $_POST['rsslinks-submit'] ) {
-		$newoptions['title'] = strip_tags( stripslashes( $_POST['rsslinks-title'] ) );
-	}
-	if ( $options != $newoptions ) {
-		$options = $newoptions;
-		update_option( 'widget_sandbox_rsslinks', $options );
-	}
-	$title = attribute_escape($options['title']);
-?>
-	<p><label for="rsslinks-title"><?php _e( 'Title:', 'sandbox' ) ?> <input class="widefat" id="rsslinks-title" name="rsslinks-title" type="text" value="<?php echo $title; ?>" /></label></p>
-	<input type="hidden" id="rsslinks-submit" name="rsslinks-submit" value="1" />
-<?php
-}
-
-// Widgets plugin: intializes the plugin after the widgets above have passed snuff
-function sandbox_widgets_init() {
-	if ( !function_exists('register_sidebars') )
-		return;
-
-	// Formats the Sandbox widgets, adding readability-improving whitespace
-	$p = array(
-		'before_widget'  =>   "\n\t\t\t" . '<li id="%1$s" class="widget %2$s">',
-		'after_widget'   =>   "\n\t\t\t</li>\n",
-		'before_title'   =>   "\n\t\t\t\t". '<h3 class="widgettitle">',
-		'after_title'    =>   "</h3>\n"
-	);
-
-	// Table for how many? Two? This way, please.
-	register_sidebars( 2, $p );
-
-	// Finished intializing Widgets plugin, now let's load the Sandbox default widgets; first, Sandbox search widget
-	$widget_ops = array(
-		'classname'    =>  'widget_search',
-		'description'  =>  __( "A search form for your blog (Sandbox)", "sandbox" )
-	);
-	wp_register_sidebar_widget( 'search', __( 'Search', 'sandbox' ), 'widget_sandbox_search', $widget_ops );
-	unregister_widget_control('search'); // We're being Sandbox-specific; remove WP default
-	wp_register_widget_control( 'search', __( 'Search', 'sandbox' ), 'widget_sandbox_search_control' );
-
-	// Sandbox Meta widget
-	$widget_ops = array(
-		'classname'    =>  'widget_meta',
-		'description'  =>  __( "Log in/out and administration links (Sandbox)", "sandbox" )
-	);
-	wp_register_sidebar_widget( 'meta', __( 'Meta', 'sandbox' ), 'widget_sandbox_meta', $widget_ops );
-	unregister_widget_control('meta'); // We're being Sandbox-specific; remove WP default
-	wp_register_widget_control( 'meta', __( 'Meta', 'sandbox' ), 'wp_widget_meta_control' );
-
-	//Sandbox RSS Links widget
-	$widget_ops = array(
-		'classname'    =>  'widget_rss_links',
-		'description'  =>  __( "RSS links for both posts and comments (Sandbox)", "sandbox" )
-	);
-	wp_register_sidebar_widget( 'rss_links', __( 'RSS Links', 'sandbox' ), 'widget_sandbox_rsslinks', $widget_ops );
-	wp_register_widget_control( 'rss_links', __( 'RSS Links', 'sandbox' ), 'widget_sandbox_rsslinks_control' );
-}
-
-// Translate, if applicable
-load_theme_textdomain('sandbox');
-
-// Runs our code at the end to check that everything needed has loaded
-add_action( 'init', 'sandbox_widgets_init' );
-
-// Registers our function to filter default gallery shortcode
-add_filter( 'post_gallery', 'sandbox_gallery', $attr );
-
-// Adds filters for the description/meta content in archives.php
-add_filter( 'archive_meta', 'wptexturize' );
-add_filter( 'archive_meta', 'convert_smilies' );
-add_filter( 'archive_meta', 'convert_chars' );
-add_filter( 'archive_meta', 'wpautop' );
-
-// Remember: the Sandbox is for play.
+add_filter( 'wp_title', 'wp_bootstrap_wp_title', 10, 2 );
 
 ?>

@@ -1,15 +1,13 @@
 /*
-THEME NAME: Rafa Ramos
-THEME URI: http://www.rafaramos.com/
-DESCRIPTION: Tema criado por mim para meu site.
-VERSION: 1.0
-AUTHOR: <a href="http://rafaramos.com/me">Rafael Ramos</a>
+Theme Name: Rafa Ramos
+Theme URI: http://rafaramos.com
+Description: My first theme :)
+Version: 1.0
+Author: Rafa Ramos
+Author URI: http://rafaramos.com
 */
 
 @charset "UTF-8";
-/* ==========================================================================
-   Definindo valores padrões
-   ========================================================================== */
 /* ==========================================================================
    Elementos básicos
    ========================================================================== */
@@ -17,6 +15,8 @@ body {
   position: relative;
   color: #2c3e50;
   font-family: "Source Code Pro", sans-serif; }
+body.home {
+  padding-top: 0;}
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "VT323";
@@ -29,13 +29,19 @@ hr {
 
 a {
   color: #34495e;
-  -o-transition: .25s;
-  -ms-transition: .25s;
-  -moz-transition: .25s;
-  -webkit-transition: .25s; }
+   }
   a:hover {
-    text-decoration: none;
-    opacity: .6; }
+    text-decoration: underline;
+    /*opacity: .6;*/ }
+  a img {
+    -o-transition: .25s;
+    -ms-transition: .25s;
+    -moz-transition: .25s;
+    -webkit-transition: .25s;
+  }
+  a:hover img {
+    opacity: .6;
+  }
 
 input, textarea {
   padding: 10px;
@@ -74,6 +80,10 @@ footer {
   footer i {
     padding: 5px; }
 
+.container {
+  width: 1080px;
+}
+
 /* ==========================================================================
    Classes de apoio
    ========================================================================== */
@@ -102,33 +112,38 @@ footer {
 /* ==========================================================================
    Personalizando o bootstrap
    ========================================================================== */
-   
-body.loggedin .navbar {
-	margin-top: 32px;
-}
-
 .navbar-default {
+  background-color: #2C3E50;
+  border-bottom: 3px dashed #e6e6e6;
+}
+body.home .navbar-default {
   background-color: rgba(255, 255, 255, 0);
-  border: none; }
-  .navbar-default a {
-    color: #fff !important; }
-    .navbar-default a:hover {
-      color: #e6e6e6 !important; }
-  .navbar-default .active a {
-    background-color: rgba(200, 200, 200, 0.5) !important; }
-  .navbar-default.sticky {
-    background-color: #34495e;
-    background-image: url("images/background-blurred.jpg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-    background-position: 50% 50%; }
-    .navbar-default.sticky .overlay {
-      background-color: rgba(52, 73, 94, 0.5); }
+  border: none; 
+}
+body.home .navbar-default.sticky {
+  background-color: #34495e;
+  background-image: url("images/background-blurred.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: 50% 50%; }
+body.home .navbar-default.sticky .overlay {
+  background-color: rgba(52, 73, 94, 0.5); }
+
+.navbar-default a {
+  color: #fff !important; }
+.navbar-default a:hover {
+  color: #e6e6e6 !important; }
+.navbar-default .active a {
+  background-color: rgba(200, 200, 200, 0.5) !important; }
 
 .btn {
   font-family: "VT323";
-  text-transform: uppercase; }
+  text-transform: uppercase; 
+  -o-transition: .25s;
+  -ms-transition: .25s;
+  -moz-transition: .25s;
+  -webkit-transition: .25s;}
   .btn:hover {
     opacity: 1; }
 
@@ -187,6 +202,7 @@ section.featured {
 
 #portfolio .item-portfolio {
   background-color: #fff;
+  margin-top: 20px;
   padding: 5px;
   border: 1px solid #ccc;
   -o-transition: .25s;
@@ -213,8 +229,8 @@ section.featured {
   -ms-transition: .25s;
   -moz-transition: .25s;
   -webkit-transition: .25s; }
-  #blog .row:hover {
-    opacity: .8; }
+  /*#blog .row:hover {
+    opacity: .8; }*/
 
 #contato {
   padding-bottom: 20px; }
@@ -234,6 +250,28 @@ section.featured {
     opacity: .8; }
     #back-to-top a:hover {
       opacity: 1; }
+
+/* ==========================================================================
+   Blog pages
+   ========================================================================== */
+
+.page-header {
+  margin-top: 10px;
+}
+
+.page-header h1 {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.post-title {
+  text-transform: none;
+  margin-top: 0;
+}
+
+.attachment-blog-destacada {
+  margin-bottom: 10px;
+}
 
 /* ==========================================================================
    Responsividade

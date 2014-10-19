@@ -1,20 +1,18 @@
-    <footer>
-      <div class="container">
-        <p>&copy; Rafa Ramos 2014</p>
-        <p>
-          <a href="#"><i class="fa fa-facebook"></i></a>
-          <a href="#"><i class="fa fa-twitter"></i></a>
-          <a href="#"><i class="fa fa-github"></i></a>
-        </p>
-      </div>
-      <div id="back-to-top">
-        <a href="#intro"><i class="fa fa-chevron-circle-up fa-3x"></i></a>
-      </div>
-      <?php wp_footer() ?>
-    </footer>
-
-
-    <!-- Bootstrap core JavaScript
+	<footer role="contentinfo">
+	  <div class="container">
+	    <p>&copy; Rafa Ramos 2014</p>
+	    <p>
+	      <a href="#"><i class="fa fa-facebook"></i></a>
+	      <a href="#"><i class="fa fa-twitter"></i></a>
+	      <a href="#"><i class="fa fa-github"></i></a>
+	    </p>
+	  </div>
+	  <div id="back-to-top">
+	    <a href="#intro"><i class="fa fa-chevron-circle-up fa-3x"></i></a>
+	  </div>
+	</footer>
+			
+	<!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -30,5 +28,9 @@
     <!-- vTicker -->
     <script src="<?php echo get_template_directory_uri(); ?>/js/vticker/jquery.vticker.js"></script>
     <script src="<?php echo get_template_directory_uri(); ?>/js/vticker.js"></script>
-  </body>
+	
+	<?php wp_footer(); // js scripts are inserted using this function ?>
+
+</body>
+
 </html>
